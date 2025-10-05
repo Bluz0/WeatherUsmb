@@ -48,8 +48,21 @@ import td.info507.weatherusmb.ui.theme.WeatherUsmbTheme
 import td.info507.weatherusmb.ui.theme.fondBlanc
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.contentColorFor
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.input.pointer.pointerInput
 
 
 class MainActivity : ComponentActivity() {
@@ -130,7 +143,7 @@ fun MainWeatherScreen(){
             ) {
                 Text(
                     // TODO : remplacer texte par api
-                    text = "Le Bourget-Du-Lac",
+                    text = "Jaja",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
@@ -147,14 +160,74 @@ fun MainWeatherScreen(){
             Icon(
                 painterResource(R.drawable.clear_day),
                 "",
-                modifier = Modifier
+                modifier = Modifier.size(80.dp)
             )
+
+        }
+
+        Column(modifier = Modifier.paddingFromBaseline(400.dp).fillMaxWidth().height(120.dp).padding(20.dp,0.dp,20.dp,0.dp).background(fondBlanc, shape = RoundedCornerShape(10.dp))){
+            Text("Prévision sur 24 heures",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp
+
+                ),
+                color = Color(67,67,67),
+                modifier = Modifier.padding(10.dp,10.dp)
+            )
+
+            val testtemp = arrayOf("0°","1°","2°","3°","4°","5°","6°","7°","8°","9°","10°","11°","12°","13°","14°","15°","16°","17°","18°","19°","20°","21°","22°","23°")
+            val hours = arrayOf("00h","01h","02h","03h","04h","05h","06h","07h","08h","09h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h")
+            val itemWidth = 60.dp
+
+            val listStateTemp = rememberLazyListState()
+            val listStateHour = rememberLazyListState()
+
+
+            // Quand on scroll en haut, ca scroll celui du bas
+            LaunchedEffect(listStateTemp,listStateHour) {
+                snapshotFlow { listStateTemp.firstVisibleItemIndex to listStateTemp.firstVisibleItemScrollOffset }
+                    .collect { (index,offset) ->
+                        listStateHour.scrollToItem(index,offset)
+
+                    }
+
+            }
+
+            LazyRow(state = listStateTemp, modifier = Modifier.fillMaxWidth()) {
+                items(testtemp) {
+                    temp ->
+                    Box(modifier = Modifier.width(itemWidth).padding(4.dp,0.dp,0.dp,0.dp),
+                        contentAlignment = Alignment.Center){
+                        Text(temp, modifier = Modifier)
+                    }
+
+                }
+            }
+
+            Spacer(modifier = Modifier.height(35.dp))
+
+            LazyRow(state = listStateHour) {
+                items(hours){
+                    hour ->
+                    Box(modifier = Modifier.width(itemWidth).padding(4.dp,0.dp,0.dp,0.dp),
+                        contentAlignment = Alignment.Center){
+                        Text(hour)
+                    }
+                }
+            }
 
         }
 
 
     }
 
+
+}
+
+// Param à voir selon type que l'api nous transmet
+@Composable
+fun hourRightNow(heureMtn : String){
 
 }
 
