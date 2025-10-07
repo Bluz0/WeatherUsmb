@@ -32,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -61,6 +60,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.input.pointer.pointerInput
 
@@ -176,46 +176,39 @@ fun MainWeatherScreen(){
                 modifier = Modifier.padding(10.dp,10.dp)
             )
 
+            // gere temp + image icon + heure
+            // TODO : mettre en place la fct pour enlever les heures avec heures actuel
             val testtemp = arrayOf("0°","1°","2°","3°","4°","5°","6°","7°","8°","9°","10°","11°","12°","13°","14°","15°","16°","17°","18°","19°","20°","21°","22°","23°")
             val hours = arrayOf("00h","01h","02h","03h","04h","05h","06h","07h","08h","09h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h")
             val itemWidth = 60.dp
 
-            val listStateTemp = rememberLazyListState()
-            val listStateHour = rememberLazyListState()
 
 
-            // Quand on scroll en haut, ca scroll celui du bas
-            LaunchedEffect(listStateTemp,listStateHour) {
-                snapshotFlow { listStateTemp.firstVisibleItemIndex to listStateTemp.firstVisibleItemScrollOffset }
-                    .collect { (index,offset) ->
-                        listStateHour.scrollToItem(index,offset)
-
-                    }
-
-            }
-
-            LazyRow(state = listStateTemp, modifier = Modifier.fillMaxWidth()) {
-                items(testtemp) {
-                    temp ->
-                    Box(modifier = Modifier.width(itemWidth).padding(4.dp,0.dp,0.dp,0.dp),
-                        contentAlignment = Alignment.Center){
-                        Text(temp, modifier = Modifier)
-                    }
-
-                }
-            }
-
-            Spacer(modifier = Modifier.height(35.dp))
-
-            LazyRow(state = listStateHour) {
-                items(hours){
-                    hour ->
-                    Box(modifier = Modifier.width(itemWidth).padding(4.dp,0.dp,0.dp,0.dp),
-                        contentAlignment = Alignment.Center){
-                        Text(hour)
+            LazyRow(modifier = Modifier.fillMaxWidth()) {
+                items(testtemp.size) {
+                    i ->
+                    Box(modifier = Modifier.width(itemWidth).fillMaxHeight()){
+                        // text : les temps
+                        Text(testtemp[i], modifier = Modifier.fillMaxWidth().padding(5.dp,0.dp,0.dp,0.dp),textAlign = TextAlign.Center)
+                        Icon(
+                            painter = painterResource(R.drawable.clear_day),
+                            contentDescription = "icon meteo",
+                            modifier = Modifier.size(30.dp).align(alignment = Alignment.Center)
+                        )
+                        Text(hours[i],
+                            style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 12.sp
+                        ), color = Color(67,67,67),
+                            modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
+                            textAlign = TextAlign.Center)
                     }
                 }
+
             }
+
+
+
 
         }
 
