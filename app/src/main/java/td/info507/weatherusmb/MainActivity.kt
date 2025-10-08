@@ -50,6 +50,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.mutableStateOf
@@ -57,13 +58,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.input.pointer.pointerInput
-
+import androidx.compose.ui.text.style.LineBreak
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.Alignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,6 +94,42 @@ fun DisplayMed(ma_str : String, modifier: Modifier, couleur : Color) {
     )
 }*/
 
+@Composable
+fun Separateur(){
+    HorizontalDivider(
+        modifier = Modifier.padding(start = 15.dp, end = 15.dp),
+        //color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+        thickness = 1.dp,
+        color = Color(67,67,67)
+    )
+}
+
+@Composable
+fun prevision_jour(TextJour : String, tempBas : String, tempHaut : String){
+    Row(modifier = Modifier.paddingFromBaseline(10.dp).padding(start=5.dp,end=5.dp).fillMaxWidth()){
+        Text(TextJour,
+            style = MaterialTheme.typography.labelSmall.copy(
+                fontWeight = FontWeight.Normal,
+                fontSize = 15.sp
+            ),
+            modifier = Modifier.padding(10.dp,0.dp,0.dp,0.dp).align(Alignment.CenterVertically),
+            textAlign = TextAlign.Center,
+        )
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            Icon(
+                painter = painterResource(R.drawable.thermometer),
+                contentDescription = "",
+                modifier = Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp).size(35.dp)
+            )
+            Text(
+                "$tempBas° - $tempHaut°", textAlign = TextAlign.Center,
+                modifier = Modifier.padding(0.dp, 0.dp, 15.dp, 0.dp)
+                    .align(alignment = Alignment.CenterVertically)
+            )
+
+        }
+    }
+}
 
 
 @Composable
@@ -96,7 +137,7 @@ fun MainWeatherScreen(){
     val context = LocalContext.current
 
     // Box = la page
-    Box(modifier = Modifier.background(Brush.verticalGradient(listOf(Color(255,156,157),Color(170,172,255)))).fillMaxSize()){
+    Box(modifier = Modifier.background(Brush.verticalGradient(listOf(Color(255,156,157),Color(170,172,255)))).fillMaxSize().verticalScroll(rememberScrollState())){
         // Row = la nav bar abaissé
         Row(modifier = Modifier.fillMaxWidth().paddingFromBaseline(30.sp)){
             // Interieur nav bar avec btn localisation (image et couleur a changer)
@@ -143,7 +184,7 @@ fun MainWeatherScreen(){
             ) {
                 Text(
                     // TODO : remplacer texte par api
-                    text = "Jaja",
+                    text = "Nom Ville",
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
@@ -155,17 +196,42 @@ fun MainWeatherScreen(){
         }
 
         // Row : icon meteo + temperature
-        Row(modifier = Modifier.paddingFromBaseline(270.dp).fillMaxWidth().padding(30.dp,0.dp,30.dp,0.dp)){
+        Row(modifier = Modifier.paddingFromBaseline(300.dp).fillMaxWidth().padding(30.dp,0.dp,30.dp,0.dp)){
 
+            // Remplace par fct ?
             Icon(
                 painterResource(R.drawable.clear_day),
                 "",
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.padding(start=0.dp).size(110.dp)
             )
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "16°C",
+                    style = MaterialTheme.typography.displayMedium.copy(
+                        fontWeight = FontWeight.Normal,
+                        color = Color(27, 27, 27),
+                        fontSize = 60.sp
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                Text(
+                    "11 km/h",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color(27, 27, 27)
+                    ),
+                    fontSize = 16.sp
+                )
+            }
+
+
 
         }
 
-        Column(modifier = Modifier.paddingFromBaseline(400.dp).fillMaxWidth().height(120.dp).padding(20.dp,0.dp,20.dp,0.dp).background(fondBlanc, shape = RoundedCornerShape(10.dp))){
+        Column(modifier = Modifier.paddingFromBaseline(400.dp).fillMaxWidth().height(150.dp).padding(20.dp,0.dp,20.dp,0.dp).background(fondBlanc, shape = RoundedCornerShape(10.dp))){
             Text("Prévision sur 24 heures",
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight.Normal,
@@ -177,14 +243,17 @@ fun MainWeatherScreen(){
             )
 
             // gere temp + image icon + heure
+            // TODO : temp api
             // TODO : mettre en place la fct pour enlever les heures avec heures actuel
+
             val testtemp = arrayOf("0°","1°","2°","3°","4°","5°","6°","7°","8°","9°","10°","11°","12°","13°","14°","15°","16°","17°","18°","19°","20°","21°","22°","23°")
-            val hours = arrayOf("00h","01h","02h","03h","04h","05h","06h","07h","08h","09h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h")
+            var hours = arrayOf("00h","01h","02h","03h","04h","05h","06h","07h","08h","09h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h")
             val itemWidth = 60.dp
 
 
 
             LazyRow(modifier = Modifier.fillMaxWidth()) {
+                // Remplace icon par fct
                 items(testtemp.size) {
                     i ->
                     Box(modifier = Modifier.width(itemWidth).fillMaxHeight()){
@@ -200,16 +269,77 @@ fun MainWeatherScreen(){
                             fontWeight = FontWeight.Normal,
                             fontSize = 12.sp
                         ), color = Color(67,67,67),
-                            modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth(),
+                            modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth().padding(bottom = 5.dp),
                             textAlign = TextAlign.Center)
                     }
                 }
 
             }
+        }
 
+        Column(modifier = Modifier.align(Alignment.Center).paddingFromBaseline(350.dp).fillMaxWidth().height(153.dp).padding(20.dp,0.dp,20.dp,0.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
+            Row(modifier = Modifier.fillMaxWidth().padding(10.dp,10.dp)){
+                Icon(
+                    painter = painterResource(R.drawable.calendar),
+                    contentDescription = "Calendrier.xmltxtjspkoi",
+                    modifier = Modifier.size(15.dp)
+                )
+                Text("Prévision sur 3 jours",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 12.sp
 
+                    ),
+                    color = Color(67,67,67),
+                    modifier = Modifier.padding(5.dp,0.dp)
+                )
+            }
 
+            prevision_jour("Jeu.","18","24")
+            Separateur()
+            prevision_jour("Ven.","17","25")
+            Separateur()
+            prevision_jour("Sam.","8", tempHaut = "14")
+        }
 
+        Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 20.dp,end = 220.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
+            Text("UV",
+                style = MaterialTheme.typography.labelSmall.copy(
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp
+            ),
+                color = Color(67,67,67),
+                modifier = Modifier.padding(15.dp,10.dp)
+            )
+
+            Box(Modifier.fillMaxWidth().fillMaxHeight()){
+                Text("Faible", modifier = Modifier.padding(15.dp,0.dp))
+                Icon(
+                    painter = painterResource(R.drawable.clear_day),
+                    contentDescription = "a voir.xml",
+                    modifier = Modifier.padding(top = 30.dp).fillMaxWidth().fillMaxHeight()
+                )
+            }
+        }
+
+        Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 220.dp,end = 20.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
+            Text("Humidité",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp
+                ),
+                color = Color(67,67,67),
+                modifier = Modifier.padding(15.dp,10.dp)
+            )
+
+            Box(Modifier.fillMaxWidth().fillMaxHeight()){
+                Text("76%", modifier = Modifier.padding(15.dp,0.dp))
+                Icon(
+                    painter = painterResource(R.drawable.humidity),
+                    contentDescription = "a voir.xml",
+                    modifier = Modifier.padding(top = 30.dp).fillMaxWidth().fillMaxHeight()
+                )
+            }
         }
 
 
@@ -220,7 +350,8 @@ fun MainWeatherScreen(){
 
 // Param à voir selon type que l'api nous transmet
 @Composable
-fun hourRightNow(heureMtn : String){
+fun hourRightNow(heureMtn : String,hours : List<String>){
+    // TODO : avec heure en param, enlever les heures selon heure param, du type si on a 15h, on fera 23-15 ou 14 jsp, pour nous afficher 15h et heures restant de la journée
 
 }
 
