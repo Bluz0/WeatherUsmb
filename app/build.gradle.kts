@@ -51,7 +51,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.ui.graphics)
     implementation(libs.androidx.animation.graphics)
-    implementation("androidx.compose.animation:animation-graphics:1.5.0")
+    implementation("androidx.compose.animation:animation-graphics:1.3.3")
     implementation(libs.androidx.leanback)
     implementation(libs.glide)
     testImplementation(libs.junit)

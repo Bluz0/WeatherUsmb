@@ -69,6 +69,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,6 +120,7 @@ fun prevision_jour(TextJour : String, tempBas : String, tempHaut : String){
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
             Icon(
                 painter = painterResource(R.drawable.thermometer),
+                tint = Color.Unspecified,
                 contentDescription = "",
                 modifier = Modifier.padding(0.dp, 0.dp, 10.dp, 0.dp).size(35.dp)
             )
@@ -197,11 +200,11 @@ fun MainWeatherScreen(){
 
         // Row : icon meteo + temperature
         Row(modifier = Modifier.paddingFromBaseline(300.dp).fillMaxWidth().padding(30.dp,0.dp,30.dp,0.dp)){
-
             // Remplace par fct ?
             Icon(
-                painterResource(R.drawable.clear_day),
+                painter = painterResource(R.drawable.clear_day),
                 "",
+                tint = Color.Unspecified,
                 modifier = Modifier.padding(start=0.dp).size(110.dp)
             )
 
@@ -218,6 +221,7 @@ fun MainWeatherScreen(){
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
+                // row pour mettre icon avec txt vent
                 Text(
                     "11 km/h",
                     style = MaterialTheme.typography.bodyMedium.copy(
@@ -262,6 +266,7 @@ fun MainWeatherScreen(){
                         Icon(
                             painter = painterResource(R.drawable.clear_day),
                             contentDescription = "icon meteo",
+                            tint = Color.Unspecified,
                             modifier = Modifier.size(30.dp).align(alignment = Alignment.Center)
                         )
                         Text(hours[i],
@@ -316,6 +321,7 @@ fun MainWeatherScreen(){
                 Text("Faible", modifier = Modifier.padding(15.dp,0.dp))
                 Icon(
                     painter = painterResource(R.drawable.clear_day),
+                    tint = Color.Unspecified,
                     contentDescription = "a voir.xml",
                     modifier = Modifier.padding(top = 30.dp).fillMaxWidth().fillMaxHeight()
                 )
@@ -336,6 +342,7 @@ fun MainWeatherScreen(){
                 Text("76%", modifier = Modifier.padding(15.dp,0.dp))
                 Icon(
                     painter = painterResource(R.drawable.humidity),
+                    tint = Color.Unspecified,
                     contentDescription = "a voir.xml",
                     modifier = Modifier.padding(top = 30.dp).fillMaxWidth().fillMaxHeight()
                 )
