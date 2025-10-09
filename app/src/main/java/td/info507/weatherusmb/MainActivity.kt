@@ -78,7 +78,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherUsmbTheme {
-                MainWeatherScreen()
+                //MainWeatherScreen()
+                CityScreen()
             }
         }
     }
@@ -368,5 +369,6 @@ fun hourRightNow(heureMtn : String,hours : List<String>){
 fun WeatherMainPreview() {
     WeatherUsmbTheme {
         MainWeatherScreen()
+        //CityScreen()
     }
 }
