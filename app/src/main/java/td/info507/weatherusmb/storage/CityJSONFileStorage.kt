@@ -7,7 +7,7 @@ import td.info507.weatherusmb.storage.utility.file.JSONFileStorage
 
 class CityJSONFileStorage(context: Context) : JSONFileStorage<City>(context, "city") {
     override fun create(id: Int, obj: City): City {
-        return City(id,obj.nameCity, lat = obj.lat, obj.lon)
+        return City(id, obj.nameCity, obj.lat, obj.lon)
     }
 
     override fun objectToJson(id: Int, obj: City): JSONObject {

@@ -2,6 +2,7 @@ package td.info507.weatherusmb.storage
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import td.info507.weatherusmb.model.City
 import td.info507.weatherusmb.storage.utility.Storage
 
@@ -28,6 +29,34 @@ object CityStorage {
             FILE_JSON -> storage = CityJSONFileStorage(context)
         }
         return storage
+    }
+
+
+
+    fun removeDuplicates(context: Context) {
+        val storage = get(context)
+        val allCities = storage.findAll()
+
+        // Groupe les villes par nom (case insensitive)
+        val cityMap = mutableMapOf<String, City>()
+        val idsToDelete = mutableListOf<Int>()
+
+        allCities.forEach { city ->
+            val cityNameLower = city.nameCity.lowercase()
+
+            if (cityMap.containsKey(cityNameLower)) {
+                // Doublon trouvé, on garde celui avec le plus petit ID
+                idsToDelete.add(city.id)
+                Log.d("CityStorage", "Doublon trouvé: ${city.nameCity} (ID: ${city.id})")
+            } else {
+                cityMap[cityNameLower] = city
+            }
+        }
+
+        // Supprime les doublons
+        idsToDelete.forEach { id ->
+            storage.delete(id)
+        }
     }
 
 

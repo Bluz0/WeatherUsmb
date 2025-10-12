@@ -1,6 +1,8 @@
 package td.info507.weatherusmb
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -48,7 +50,7 @@ class CityActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WeatherUsmbTheme {
-                CityScreen()
+                CityScreenList()
             }
         }
     }
@@ -72,7 +74,11 @@ fun CityScreenList() {
     }
 
 
-    Text(citys.size.toString())
+    val longueur_citys = citys.size
+    if (longueur_citys == 0) {
+        Text(citys.size.toString())
+    }
+
 
     /*PullToRefreshBox(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
@@ -91,12 +97,18 @@ fun CityScreenList() {
 
             items(citys) { city ->
                 CityRow(
-                    city, {},
-                    {
-                        //cityId.intValue = city.id
-                        //openDeleteDialog.value = true
-                    })
+                    city, {cityChoisi ->
+                        val intent = Intent(context, MainActivity::class.java).apply {
+                            putExtra("cityName", cityChoisi.nameCity)
+                            putExtra("cityLat", cityChoisi.lat)
+                            putExtra("cityLon", cityChoisi.lon)
+                            putExtra("cityId", cityChoisi.id)
+                        }
+                        context.startActivity(intent)
+                    },
 
+                    {}
+                )
             }
         }
 

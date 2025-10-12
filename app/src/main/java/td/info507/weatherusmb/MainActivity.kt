@@ -71,15 +71,23 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import td.info507.weatherusmb.model.City
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val cityName = intent.getStringExtra("cityName") ?: "Ville inconnue"
+        val cityLat = intent.getDoubleExtra("cityLat", 0.0)
+        val cityLon = intent.getDoubleExtra("cityLon", 0.0)
+        val cityId = intent.getIntExtra("cityId", 0)
+
         setContent {
             WeatherUsmbTheme {
+                MainWeatherScreen(cityName, cityLat, cityLon)
                 //MainWeatherScreen()
-                CityScreen()
+                //CityScreen()
             }
         }
     }
@@ -137,7 +145,9 @@ fun prevision_jour(TextJour : String, tempBas : String, tempHaut : String){
 
 
 @Composable
-fun MainWeatherScreen(){
+fun MainWeatherScreen(cityName: String,
+                      cityLat: Double = 0.0,
+                      cityLon: Double = 0.0){
     val context = LocalContext.current
 
     // Box = la page
@@ -146,7 +156,11 @@ fun MainWeatherScreen(){
         Row(modifier = Modifier.fillMaxWidth().paddingFromBaseline(30.sp)){
             // Interieur nav bar avec btn localisation (image et couleur a changer)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End){
-                IconButton(onClick = {}, modifier = Modifier.padding(20.dp,0.dp).height(40.dp).width(40.dp).background(
+                IconButton(onClick = {
+                    Toast.makeText(context, "Coucou !", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, CityActivity::class.java)
+                    context.startActivity(intent)
+                }, modifier = Modifier.padding(20.dp,0.dp).height(40.dp).width(40.dp).background(
                     fondBlanc,
                     RoundedCornerShape(7.dp))){
                     Icon(
@@ -188,7 +202,7 @@ fun MainWeatherScreen(){
             ) {
                 Text(
                     // TODO : remplacer texte par api
-                    text = "Nom Ville",
+                    text = cityName,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
@@ -368,7 +382,7 @@ fun hourRightNow(heureMtn : String,hours : List<String>){
 @Composable
 fun WeatherMainPreview() {
     WeatherUsmbTheme {
-        MainWeatherScreen()
+        MainWeatherScreen(cityName = "test", cityLat = 0.0, cityLon = 0.0)
         //CityScreen()
     }
 }

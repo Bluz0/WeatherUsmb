@@ -74,8 +74,17 @@ class CityRequest(private val context : Context, onUpdate : () -> Unit) {
 
 
     private fun refresh(json: JSONObject) {
+        delete()
         insert(json)
     }
+
+    private fun delete(){
+        for (city: City in CityStorage.get(context).findAll()){
+
+            CityStorage.get(context).delete(city.id)
+        }
+    }
+
 
 
 
@@ -86,11 +95,14 @@ class CityRequest(private val context : Context, onUpdate : () -> Unit) {
 
 
         val city = City(
+            id = 0,
             nameCity = location.getString("name"),
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon")
         )
         CityStorage.get(context).insert(city) // Sauvegarde json local
+
+        CityStorage.removeDuplicates(context)
 
     }
 
