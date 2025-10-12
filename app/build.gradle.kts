@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.animation.graphics)
     implementation("androidx.compose.animation:animation-graphics:1.3.3")
     implementation("com.android.volley:volley:1.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation(libs.androidx.leanback)
     implementation(libs.glide)
     implementation(libs.androidx.runtime)
