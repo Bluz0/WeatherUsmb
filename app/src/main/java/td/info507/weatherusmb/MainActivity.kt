@@ -72,6 +72,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import td.info507.weatherusmb.model.City
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,7 +160,6 @@ fun MainWeatherScreen(cityName: String,
             // Interieur nav bar avec btn localisation (image et couleur a changer)
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End){
                 IconButton(onClick = {
-                    Toast.makeText(context, "Coucou !", Toast.LENGTH_SHORT).show()
                     val intent = Intent(context, CityActivity::class.java)
                     context.startActivity(intent)
                 }, modifier = Modifier.padding(20.dp,0.dp).height(40.dp).width(40.dp).background(
@@ -172,10 +174,16 @@ fun MainWeatherScreen(cityName: String,
             }
         }
 
+        val date_aujourdhui_format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val date_aujourdhui = date_aujourdhui_format.format(Date())
+
+        val jour_format = SimpleDateFormat("EEEE",Locale.getDefault())
+        val majuscule = jour_format.format(Date()).substring(0,1).uppercase()
+        val jour = majuscule + jour_format.format(Date()).substring(1)
         // TODO : Jour choisi et date format jj/mm/aaaa
         Column(modifier = Modifier.paddingFromBaseline(80.dp).padding(20.dp,0.dp).height(50.dp).width(100.dp)){
-            Text(text = "Dimanche", fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color(29,29,29))
-            Text(text = "02/10/2025",
+            Text(text = jour, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color(29,29,29))
+            Text(text = date_aujourdhui,
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp
@@ -191,7 +199,7 @@ fun MainWeatherScreen(cityName: String,
             .background(fondBlanc, shape = RoundedCornerShape(18.dp))
             ) {
             Icon(
-                painter = painterResource(R.drawable.location),
+                painter = painterResource(R.drawable.baseline_location_on_24),
                 contentDescription = "icon loc",
                 modifier = Modifier.background(fondBlanc).padding(10.dp, 0.dp).fillMaxHeight()
                     .width(50.dp).size(29.dp)

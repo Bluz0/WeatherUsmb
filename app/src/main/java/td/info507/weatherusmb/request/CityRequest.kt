@@ -17,7 +17,6 @@ import kotlin.text.insert
 
 var API_KEY = "b3a05d1bcd6443febf965205252409"
 var URL = "http://api.weatherapi.com/v1/forecast.json?key="+API_KEY+"&q="
-var test_nom = "Le Bourget-Du-Lac"
 
 class CityRequest(private val context : Context, private val cityName: String, onUpdate : () -> Unit) {
 

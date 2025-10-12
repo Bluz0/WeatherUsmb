@@ -78,6 +78,7 @@ fun CityRow(
         Log.d("logcityid",city.id.toString())
 
         if (city.id != 1){
+            // TODO : créer une sorte de refresh quand on delete, prcq ca suppr pas a l'affichage
             IconButton(
                 onClick = { CityStorage.get(context).delete(city.id)},
                 modifier = Modifier.paddingFromBaseline(13.dp)
