@@ -23,6 +23,8 @@ class CityRequest(private val context : Context, private val cityName: String, o
     init{
         val queue = Volley.newRequestQueue(context)
 
+
+
         val request = JsonObjectRequest(
             Request.Method.GET,
             URL + cityName,
@@ -56,17 +58,19 @@ class CityRequest(private val context : Context, private val cityName: String, o
 
 
 
+
     // JSONOBject au deb car object
     private fun insert(json : JSONObject){
 
         val location = json.getJSONObject("location") // Recup la liste location
-
+        val current = json.getJSONObject("current") // recup temp mtn
 
         val city = City(
             id = 0,
             nameCity = location.getString("name"),
             lat = location.getDouble("lat"),
-            lon = location.getDouble("lon")
+            lon = location.getDouble("lon"),
+            temp  = current.getDouble("temp_c")
         )
         CityStorage.get(context).insert(city) // Sauvegarde json local
 
@@ -131,12 +135,13 @@ class CityRequestByCoordinates(
 
     private fun saveCity(json: JSONObject, cityName: String) {
         val location = json.getJSONObject("location")
-
+        val current = json.getJSONObject("current")
         val city = City(
             id = 0,
             nameCity = cityName, // Utilise le nom du Geocoder
             lat = location.getDouble("lat"),
-            lon = location.getDouble("lon")
+            lon = location.getDouble("lon"),
+            temp = current.getDouble("temp_c")
         )
 
         CityStorage.get(context).insert(city)

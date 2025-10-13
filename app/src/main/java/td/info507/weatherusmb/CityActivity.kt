@@ -97,6 +97,7 @@ fun CityScreenList() {
     LaunchedEffect(Unit) {
         // cityRequest force une requête au démarrage et ajoute via api
         //CityRequest(context) {
+        //CityStorage.clearAll(context)
         citys.clear()
         citys.addAll(CityStorage.get(context).findAll())
 
@@ -136,6 +137,7 @@ fun CityScreenList() {
                             putExtra("cityLat", cityChoisi.lat)
                             putExtra("cityLon", cityChoisi.lon)
                             putExtra("cityId", cityChoisi.id)
+                            putExtra("cityTemperature", city.temp)
                         }
                         context.startActivity(intent)
                     },

@@ -31,6 +31,14 @@ object CityStorage {
         return storage
     }
 
+    fun clearAll(context: Context) {
+        val storage = get(context)
+        storage.findAll().forEach { city ->
+            storage.delete(city.id)
+        }
+        Log.d("CityStorage", "Toutes les villes supprimées")
+    }
+
 
 
     fun removeDuplicates(context: Context) {

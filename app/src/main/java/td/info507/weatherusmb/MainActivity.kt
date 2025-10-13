@@ -81,14 +81,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val cityId = intent.getIntExtra("cityId", 0)
         val cityName = intent.getStringExtra("cityName") ?: "Ville inconnue"
         val cityLat = intent.getDoubleExtra("cityLat", 0.0)
         val cityLon = intent.getDoubleExtra("cityLon", 0.0)
-        val cityId = intent.getIntExtra("cityId", 0)
+        val cityTemp = intent.getDoubleExtra("cityTemperature", 0.0)
 
         setContent {
             WeatherUsmbTheme {
-                MainWeatherScreen(cityName, cityLat, cityLon)
+                MainWeatherScreen(cityName, cityLat,cityLon, cityTemp)
                 //MainWeatherScreen()
                 //CityScreen()
             }
@@ -150,7 +151,8 @@ fun prevision_jour(TextJour : String, tempBas : String, tempHaut : String){
 @Composable
 fun MainWeatherScreen(cityName: String,
                       cityLat: Double = 0.0,
-                      cityLon: Double = 0.0){
+                      cityLon: Double = 0.0,
+                      cityTemp : Double){
     val context = LocalContext.current
 
     // Box = la page
@@ -180,7 +182,7 @@ fun MainWeatherScreen(cityName: String,
         val jour_format = SimpleDateFormat("EEEE",Locale.getDefault())
         val majuscule = jour_format.format(Date()).substring(0,1).uppercase()
         val jour = majuscule + jour_format.format(Date()).substring(1)
-        // TODO : Jour choisi et date format jj/mm/aaaa
+
         Column(modifier = Modifier.paddingFromBaseline(80.dp).padding(20.dp,0.dp).height(50.dp).width(100.dp)){
             Text(text = jour, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, color = Color(29,29,29))
             Text(text = date_aujourdhui,
@@ -209,7 +211,6 @@ fun MainWeatherScreen(cityName: String,
                     .background(fondBlanc, shape = RoundedCornerShape(0.dp, 18.dp, 18.dp, 0.dp))
             ) {
                 Text(
-                    // TODO : remplacer texte par api
                     text = cityName,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
@@ -235,7 +236,7 @@ fun MainWeatherScreen(cityName: String,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "16°C",
+                    "$cityTemp°C",
                     style = MaterialTheme.typography.displayMedium.copy(
                         fontWeight = FontWeight.Normal,
                         color = Color(27, 27, 27),
@@ -390,7 +391,7 @@ fun hourRightNow(heureMtn : String,hours : List<String>){
 @Composable
 fun WeatherMainPreview() {
     WeatherUsmbTheme {
-        MainWeatherScreen(cityName = "test", cityLat = 0.0, cityLon = 0.0)
+        MainWeatherScreen(cityName = "test", cityLat = 0.0, cityLon = 0.0, cityTemp = 0.0)
         //CityScreen()
     }
 }

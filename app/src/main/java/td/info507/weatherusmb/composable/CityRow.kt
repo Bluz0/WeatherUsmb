@@ -101,6 +101,6 @@ fun CityRow(
 @Composable
 fun CityRowPreview() {
     WeatherUsmbTheme {
-        CityRow(City(0,"Le Bourget-Du-Lac",0.0,0.0,),{},{})
+        CityRow(City(0,"Le Bourget-Du-Lac",0.0,0.0,temp = 0.0),{},{})
     }
 }
