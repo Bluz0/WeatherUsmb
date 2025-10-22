@@ -68,6 +68,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.ui.Alignment
+import td.info507.weatherusmb.request.CitySearch
 
 
 class CityActivity : ComponentActivity() {
@@ -213,14 +214,11 @@ fun CityScreenList() {
                         }
                     }
                 }
-                // Request search
 
-                // citysearchrow
-                Column(){
-                    Text("testville")
-                    Text("testville")
-                    Text("testville")
-                    Text("testville")
+                // citysearchrow dedans ya column
+
+                if (ville_nom.length >= 3){
+                    CitySearch(context, ville_nom, {})
                 }
 
 
