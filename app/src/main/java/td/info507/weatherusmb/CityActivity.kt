@@ -51,7 +51,6 @@ import td.info507.weatherusmb.model.City
 import td.info507.weatherusmb.ui.theme.fondBlanc
 import td.info507.weatherusmb.helper.*
 import td.info507.weatherusmb.request.CityRequestByCoordinates
-import td.info507.weatherusmb.request.getCityNameFromCoordinates
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -127,13 +126,6 @@ fun CityScreenList() {
         //}
     }
 
-
-    val longueur_citys = citys.size
-    if (longueur_citys == 0) {
-        Text(citys.size.toString())
-    }
-
-
     /*PullToRefreshBox(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         isRefreshing = isRefreshing.value,
@@ -149,7 +141,8 @@ fun CityScreenList() {
     var bouton_click by rememberSaveable { mutableStateOf(false) }
     var ville_nom by rememberSaveable { mutableStateOf("") }
 
-
+    // Lignes avec villes
+    // Quand on clique dessus MainActivity lancé avec bonne donnée
     Box(modifier = Modifier.background(Brush.verticalGradient(listOf(Color(255,156,157),Color(170,172,255)))).fillMaxWidth().fillMaxHeight()) {
         LazyColumn(modifier = Modifier.fillMaxHeight().align(Alignment.TopCenter).paddingFromBaseline(180.dp)) {
             items(citys) { city ->
@@ -180,15 +173,14 @@ fun CityScreenList() {
             Icon(Icons.Filled.Add, "Large floating action button")
         }
 
+        // ce qui spawn quand on clique dessus
         val sheetState = rememberModalBottomSheetState(
             true,
         )
 
 
         if (bouton_click){
-
             ModalBottomSheet(onDismissRequest = {bouton_click = false}, Modifier, sheetState) {
-
                 Row(modifier = Modifier.fillMaxWidth()){
                     // btn envoi a droite
                     // outlline a gauche quand text tapé ajout d'une column

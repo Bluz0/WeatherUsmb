@@ -20,7 +20,7 @@ data class LocationData(
     val longitude: Double
 )
 
-// Composable pour gérer la géolocalisation
+// Demande permission du tel pour gérer la géolocalisation
 @Composable
 fun rememberLocationPermission(
     onLocationGranted: (LocationData) -> Unit,
@@ -75,7 +75,7 @@ fun checkLocationPermission(context: Context): Boolean {
             ) == PackageManager.PERMISSION_GRANTED
 }
 
-// Récupère la position actuelle
+// Récupère la position actuelle du telephone
 fun getCurrentLocation(
     context: Context,
     onSuccess: (LocationData) -> Unit,

@@ -23,8 +23,6 @@ class CityRequest(private val context : Context, private val cityName: String, o
     init{
         val queue = Volley.newRequestQueue(context)
 
-
-
         val request = JsonObjectRequest(
             Request.Method.GET,
             URL + cityName,
@@ -42,7 +40,6 @@ class CityRequest(private val context : Context, private val cityName: String, o
 
     }
 
-
     private fun refresh(json: JSONObject) {
         delete()
         insert(json)
@@ -54,10 +51,6 @@ class CityRequest(private val context : Context, private val cityName: String, o
             CityStorage.get(context).delete(city.id)
         }
     }
-
-
-
-
 
     // JSONOBject au deb car object
     private fun insert(json : JSONObject){
@@ -78,10 +71,9 @@ class CityRequest(private val context : Context, private val cityName: String, o
 
     }
 
-
-
 }
 
+// Meme classe mais avec les latitudes longitudes
 class CityRequestByCoordinates(
     private val context: Context,
     private val latitude: Double,
@@ -90,14 +82,8 @@ class CityRequestByCoordinates(
 ) {
 
     init {
-        // Récupère les données météo avec les coordonnées
-        fetchWeatherByCoordinates()
-    }
-
-    private fun fetchWeatherByCoordinates() {
         val queue = Volley.newRequestQueue(context)
 
-        // L'API accepte les coordonnées au format "lat,lon"
         val coords = "$latitude,$longitude"
 
         val request = JsonObjectRequest(
@@ -105,8 +91,8 @@ class CityRequestByCoordinates(
             "http://api.weatherapi.com/v1/forecast.json?key=$API_KEY&q=$coords&days=1",
             null,
             { response ->
-                // Étape 2 : Récupère le nom de la ville via Geocoder
-                getCityNameAndSave(response)
+                // Récupère le nom de la ville
+                getCityNameAndInsert(response)
             },
             { err ->
                 Log.e("CityRequestCoords", "Erreur API: ${err.message}")
@@ -116,76 +102,26 @@ class CityRequestByCoordinates(
         queue.add(request)
     }
 
-
-    private fun getCityNameAndSave(json: JSONObject) {
-        getCityNameFromCoordinates(context, latitude, longitude) { cityName ->
-            if (cityName != null) {
-                // Étape 3 : Sauvegarde avec le nom traduit
-                saveCity(json, cityName)
-                onUpdate()
-                Toast.makeText(context, "Ville ajoutée: $cityName", Toast.LENGTH_SHORT).show()
-            } else {
-                // Fallback : utilise le nom de l'API
-                val location = json.getJSONObject("location")
-                saveCity(json, location.getString("name"))
-                onUpdate()
-            }
-        }
+    // Recup le nom de la ville via api et insert dans json
+    private fun getCityNameAndInsert(json: JSONObject) {
+        val location = json.getJSONObject("location")
+        insertCity(json, location.getString("name"))
+        onUpdate()
     }
 
-    private fun saveCity(json: JSONObject, cityName: String) {
+    // saveCity : Comme insert mais nom de ville
+    private fun insertCity(json: JSONObject, cityName: String) {
         val location = json.getJSONObject("location")
         val current = json.getJSONObject("current")
         val city = City(
             id = 0,
-            nameCity = cityName, // Utilise le nom du Geocoder
+            nameCity = cityName,
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon"),
             temp = current.getDouble("temp_c")
         )
 
         CityStorage.get(context).insert(city)
-        Log.d("CityRequestCoords", "Ville insérée: $cityName (${city.lat}, ${city.lon})")
-
         CityStorage.removeDuplicates(context)
-    }
-}
-
-// Récupère le nom d'une ville via coordonnées
-fun getCityNameFromCoordinates(
-    context: Context,
-    latitude: Double,
-    longitude: Double,
-    onResult: (String?) -> Unit
-) {
-    try {
-        val geocoder = Geocoder(context, Locale.getDefault())
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Android 13+ (API 33+)
-            geocoder.getFromLocation(latitude, longitude, 1) { addresses ->
-                val cityName = addresses.firstOrNull()?.locality
-                    ?: addresses.firstOrNull()?.subAdminArea
-                    ?: addresses.firstOrNull()?.adminArea
-                    ?: "Ville inconnue"
-
-                onResult(cityName)
-                Log.d("Geocoder", "Ville trouvée: $cityName")
-            }
-        } else {
-            // Android 12 et moins
-            @Suppress("DEPRECATION")
-            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-            val cityName = addresses?.firstOrNull()?.locality
-                ?: addresses?.firstOrNull()?.subAdminArea
-                ?: addresses?.firstOrNull()?.adminArea
-                ?: "Ville inconnue"
-
-            onResult(cityName)
-            Log.d("Geocoder", "Ville trouvée: $cityName")
-        }
-    } catch (e: Exception) {
-        Log.e("Geocoder", "Erreur: ${e.message}")
-        onResult(null)
     }
 }
