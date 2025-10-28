@@ -128,6 +128,7 @@ fun CityScreenList() {
         //CityRequest(context) {
         //CityStorage.clearAll(context)
         citys.clear()
+
         citys.addAll(CityStorage.get(context).findAll())
 
         if (citys.isEmpty()) {
@@ -186,6 +187,7 @@ fun CityScreenList() {
             items(citys) { city ->
                 CityRow(
                     city, {cityChoisi ->
+
                         val intent = Intent(context, MainActivity::class.java).apply {
                             putExtra("cityName", cityChoisi.nameCity)
                             putExtra("cityLat", cityChoisi.lat)
@@ -196,7 +198,10 @@ fun CityScreenList() {
                         context.startActivity(intent)
                     },
 
-                    {}
+                    {ville_suppr ->
+                        CityStorage.get(context).delete(ville_suppr.id)
+                        citys.remove(ville_suppr)
+                    }
                 )
             }
         }
@@ -241,6 +246,7 @@ fun CityScreenList() {
                     ) {
                         OutlinedIconButton(
                             onClick = { CityRequest(context,ville_nom){
+                                citys.clear() // permet de nettoyer pour pas avoir tt d'un coup
                                 citys.addAll(CityStorage.get(context).findAll())
                                 bouton_click = false
                                 ville_nom = ""
@@ -283,6 +289,7 @@ fun CityScreenList() {
                         items(items = cityListe) { ville ->
                             CitySearchRow(ville, onClick = {
                                 CityRequest(context, ville.name){
+                                    citys.clear()
                                     citys.addAll(CityStorage.get(context).findAll())
                                     bouton_click = false
                                     ville_nom = ""

@@ -43,7 +43,7 @@ import td.info507.weatherusmb.storage.CityStorage
 fun CityRow(
     city: City,
     onClick: (City) -> Unit,
-    onLongClick: (City) -> Unit
+    onDelete: (City) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -55,8 +55,7 @@ fun CityRow(
             .clip(RoundedCornerShape(18.dp))
             .background(fondBlanc, shape = RoundedCornerShape(18.dp))
             .combinedClickable(
-                onClick = { onClick(city) },
-                onLongClick = { onLongClick(city) }
+                onClick = { onClick(city) }
             )
     ) {
         Icon(
@@ -80,7 +79,7 @@ fun CityRow(
         if (city.id != 1){
             // TODO : créer une sorte de refresh quand on delete, prcq ca suppr pas a l'affichage
             IconButton(
-                onClick = { CityStorage.get(context).delete(city.id)},
+                onClick = {onDelete(city)},//{CityStorage.get(context).delete(city.id)},
                 modifier = Modifier.paddingFromBaseline(13.dp)
 
             ){
