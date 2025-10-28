@@ -56,6 +56,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -66,9 +67,15 @@ import androidx.compose.foundation.text.input.TextObfuscationMode.Companion.Hidd
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.delay
+import td.info507.weatherusmb.composable.CitySearchRow
 import td.info507.weatherusmb.request.CitySearch
+import td.info507.weatherusmb.request.CitySearchResultat
 
 
 class CityActivity : ComponentActivity() {
@@ -92,6 +99,9 @@ fun CityScreenList() {
     val isRefreshing = remember { mutableStateOf(false) }
     val openAddDialog = remember { mutableStateOf(false) }
     val isLoadingGPS = remember { mutableStateOf(false) }
+
+
+
 
     // Configuration de la géolocalisation
     val requestLocation = rememberLocationPermission(
@@ -141,6 +151,33 @@ fun CityScreenList() {
 
     var bouton_click by rememberSaveable { mutableStateOf(false) }
     var ville_nom by rememberSaveable { mutableStateOf("") }
+    val cityListe = remember { mutableStateListOf<CitySearchResultat>() }
+    val isSearching = remember { mutableStateOf(false) }
+
+    LaunchedEffect(ville_nom) {
+        if (ville_nom.length >= 3) {
+            isSearching.value = true
+            delay(500)
+
+            CitySearch(
+                context,
+                ville_nom,
+                resultat = { resultats ->
+                    cityListe.clear()
+                    cityListe.addAll(resultats)
+                    isSearching.value = false
+                },
+                {
+                    cityListe.clear()
+                    isSearching.value = false
+                }
+            )
+        } else {
+            cityListe.clear()
+        }
+    }
+
+
 
     // Lignes avec villes
     // Quand on clique dessus MainActivity lancé avec bonne donnée
@@ -182,13 +219,13 @@ fun CityScreenList() {
 
         if (bouton_click){
             ModalBottomSheet(onDismissRequest = {bouton_click = false}, Modifier, sheetState) {
-                Row(modifier = Modifier.fillMaxWidth()){
+                Row(modifier = Modifier.fillMaxWidth()) {
                     // btn envoi a droite
                     // outlline a gauche quand text tapé ajout d'une column
 
                     OutlinedTextField(
                         value = ville_nom,
-                        onValueChange = {ville_nom = it},
+                        onValueChange = { ville_nom = it },
                         label = {
                             // TODO : remplace par labelCity
                             Text(text = "Cherchez votre ville")
@@ -198,14 +235,17 @@ fun CityScreenList() {
 
                     )
 
-                    Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp, end = 30.dp),horizontalArrangement = Arrangement.End){
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 10.dp, end = 30.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
                         OutlinedIconButton(
                             onClick = {},
                             border = BorderStroke(1.dp, Color.Red),
                             shape = RoundedCornerShape(10.dp),
                             modifier = Modifier.size(50.dp)
 
-                        ){
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.outline_arrow_right_alt_24),
                                 contentDescription = "arrow send",
@@ -215,11 +255,64 @@ fun CityScreenList() {
                     }
                 }
 
-                // citysearchrow dedans ya column
 
-                if (ville_nom.length >= 3){
-                    CitySearch(context, ville_nom, {})
+                /*
+                CitySearchRow(CitySearchResultat("Marignier","Haute-Savoie","France",15.1,15.2),{})
+                Separateur()
+                CitySearchRow(CitySearchResultat("Marignier","Haute-Savoie","France",15.1,15.2),{})
+                */
+
+                if (isSearching.value) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
                 }
+
+                if (!cityListe.isEmpty()) {
+                    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                        items(items = cityListe) { ville ->
+                            CitySearchRow(ville, onClick = {
+                                CityRequest(context, ville.name){
+                                    citys.addAll(CityStorage.get(context).findAll())
+                                    bouton_click = false
+                                    ville_nom = ""
+                                    cityListe.clear()
+                                }
+                            })
+                        }
+                    }
+                }
+                else if (ville_nom.length < 3){
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Tapez au moins 3 caractères")
+                    }
+                }
+                else{
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Aucun résultat trouvé")
+                    }
+                }
+
+
+
+
+
+
 
 
             }

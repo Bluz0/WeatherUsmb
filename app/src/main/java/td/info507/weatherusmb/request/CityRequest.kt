@@ -41,7 +41,6 @@ class CityRequest(private val context : Context, private val cityName: String, o
     }
 
     private fun refresh(json: JSONObject) {
-        delete()
         insert(json)
     }
 
@@ -65,9 +64,10 @@ class CityRequest(private val context : Context, private val cityName: String, o
             lon = location.getDouble("lon"),
             temp  = current.getDouble("temp_c")
         )
+        CityStorage.removeDuplicates(context)
         CityStorage.get(context).insert(city) // Sauvegarde json local
 
-        CityStorage.removeDuplicates(context)
+
 
     }
 
