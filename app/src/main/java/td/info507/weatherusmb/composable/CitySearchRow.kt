@@ -31,7 +31,7 @@ fun CitySearchRow(
 
     val context = LocalContext.current
     Row(modifier = Modifier.fillMaxWidth().height(50.dp).padding(start = 35.dp,bottom = 10.dp).clickable(onClick = onClick)){
-        Text(result.name,
+        Text(result.name + ", "+ result.region,
             modifier = Modifier.padding(top = 10.dp)
         )
 

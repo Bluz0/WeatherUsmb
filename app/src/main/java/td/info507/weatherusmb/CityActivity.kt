@@ -240,8 +240,13 @@ fun CityScreenList() {
                         horizontalArrangement = Arrangement.End
                     ) {
                         OutlinedIconButton(
-                            onClick = {},
-                            border = BorderStroke(1.dp, Color.Red),
+                            onClick = { CityRequest(context,ville_nom){
+                                citys.addAll(CityStorage.get(context).findAll())
+                                bouton_click = false
+                                ville_nom = ""
+                                cityListe.clear()
+                            } },
+                            border = BorderStroke(1.dp, Color.Black),
                             shape = RoundedCornerShape(10.dp),
                             modifier = Modifier.size(50.dp)
 
