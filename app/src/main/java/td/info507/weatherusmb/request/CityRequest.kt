@@ -61,18 +61,24 @@ class CityRequest(private val context : Context, private val cityName: String, o
         val forecast = json.getJSONObject("forecast").getJSONArray("forecastday")
         val hours_forecast = forecast.getJSONObject(0).getJSONArray("hour")//.getJSONObject(0)
 
+        //val condition_heure = hours_forecast.getJSONObject(0).getJSONObject("condition").getString("text")
         Log.d("forecast",hours_forecast.toString())
-
+        //Log.d("condition_heure", condition_heure)
         val hour_day_list = mutableListOf<String>()
+        val condition_list = mutableListOf<String>()
 
-        Log.d("list_temp", hour_day_list.toString())
+        val condition_now = current.getJSONObject("condition").getString("text")
+
+        Log.d("list_temp", condition_now)
 
 
         for (i in 0 until hours_forecast.length()) {
             hour_day_list.add(hours_forecast.getJSONObject(i).getString("temp_c") + "°C")
+            condition_list.add(hours_forecast.getJSONObject(i).getJSONObject("condition").getString("text"))
         }
 
         Log.d("list_temp",hour_day_list.toString())
+        Log.d("list_cond",condition_list.size.toString())
 
         val city = City(
             id = 0,
@@ -80,7 +86,9 @@ class CityRequest(private val context : Context, private val cityName: String, o
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon"),
             temp  = current.getDouble("temp_c"),
-            hour = hour_day_list
+            hour = hour_day_list,
+            condition = condition_list,
+            meteo = condition_now
         )
         CityStorage.removeDuplicates(context)
         CityStorage.get(context).insert(city) // Sauvegarde json local
@@ -134,9 +142,12 @@ class CityRequestByCoordinates(
         val forecast = json.getJSONObject("forecast").getJSONArray("forecastday")
         val hours_forecast = forecast.getJSONObject(0).getJSONArray("hour")
         val hour_day_list = mutableListOf<String>()
+        val condition_list = mutableListOf<String>()
+        val condition_now = current.getJSONObject("condition").getString("text")
 
         for (i in 0 until hours_forecast.length()) {
             hour_day_list.add(hours_forecast.getJSONObject(i).getString("temp_c") + "°C")
+            condition_list.add(hours_forecast.getJSONObject(i).getJSONObject("condition").getString("text"))
         }
 
         val city = City(
@@ -145,7 +156,9 @@ class CityRequestByCoordinates(
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon"),
             temp = current.getDouble("temp_c"),
-            hour = hour_day_list
+            hour = hour_day_list,
+            condition = condition_list,
+            meteo = condition_now
         )
 
         CityStorage.get(context).insert(city)

@@ -2,6 +2,7 @@ package td.info507.weatherusmb
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -71,6 +72,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.Alignment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import td.info507.weatherusmb.composable.TextToLogo
 import td.info507.weatherusmb.model.City
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -88,9 +90,12 @@ class MainActivity : ComponentActivity() {
         val cityTemp = intent.getDoubleExtra("cityTemperature", 0.0)
         val cityHour = intent.getStringArrayListExtra("cityHour")?.toMutableList()
             ?: mutableListOf()
+        val cityCondition = intent.getStringArrayListExtra("cityCondition")?.toMutableList()
+            ?: mutableListOf()
+        val cityMeteo = intent.getStringExtra("cityMeteo") ?: ""
         setContent {
             WeatherUsmbTheme {
-                MainWeatherScreen(cityName, cityLat,cityLon, cityTemp, cityHour)
+                MainWeatherScreen(cityName, cityLat,cityLon, cityTemp, cityHour, cityCondition,cityMeteo)
                 //MainWeatherScreen()
                 //CityScreen()
             }
@@ -98,17 +103,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/*
-@Composable
-fun DisplayMed(ma_str : String, modifier: Modifier, couleur : Color) {
-    //Text(text = ma_str,modifier = Modifier, color = couleur, fontSize = 45.dp, lineHeight = 52.dp , letterSpacing = 0.dp)
-    MaterialTheme(
-        colorScheme = "",
-        typography =
-
-
-    )
-}*/
 
 @Composable
 fun Separateur(){
@@ -154,7 +148,9 @@ fun MainWeatherScreen(cityName: String,
                       cityLat: Double = 0.0,
                       cityLon: Double = 0.0,
                       cityTemp : Double,
-                      cityHour : MutableList<String> = mutableListOf()){
+                      cityHour : MutableList<String> = mutableListOf(),
+                      cityCondition : MutableList<String> = mutableListOf(),
+                      cityMeteo : String){
     val context = LocalContext.current
 
     // Box = la page
@@ -226,9 +222,9 @@ fun MainWeatherScreen(cityName: String,
 
         // Row : icon meteo + temperature
         Row(modifier = Modifier.paddingFromBaseline(300.dp).fillMaxWidth().padding(30.dp,0.dp,30.dp,0.dp)){
-            // Remplace par fct ?
+
             Icon(
-                painter = painterResource(R.drawable.clear_day),
+                painter = TextToLogo(cityMeteo),
                 "",
                 tint = Color.Unspecified,
                 modifier = Modifier.padding(start=0.dp).size(110.dp)
@@ -278,19 +274,19 @@ fun MainWeatherScreen(cityName: String,
 
             //val testtemp = arrayOf("0°","1°","2°","3°","4°","5°","6°","7°","8°","9°","10°","11°","12°","13°","14°","15°","16°","17°","18°","19°","20°","21°","22°","23°")
             var hours = arrayOf("00h","01h","02h","03h","04h","05h","06h","07h","08h","09h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h")
+            Log.d("list_cond",hours.size.toString())
             val itemWidth = 60.dp
-
 
 
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 // Remplace icon par fct
-                items(cityHour.size) {
+                items(cityCondition.size) {
                     i ->
                     Box(modifier = Modifier.width(itemWidth).fillMaxHeight()){
                         // text : les temps
                         Text(cityHour[i], modifier = Modifier.fillMaxWidth().padding(5.dp,0.dp,0.dp,0.dp),textAlign = TextAlign.Center)
                         Icon(
-                            painter = painterResource(R.drawable.clear_day),
+                            painter = TextToLogo(cityCondition[i]),
                             contentDescription = "icon meteo",
                             tint = Color.Unspecified,
                             modifier = Modifier.size(30.dp).align(alignment = Alignment.Center)
@@ -393,7 +389,7 @@ fun hourRightNow(heureMtn : String,hours : List<String>){
 @Composable
 fun WeatherMainPreview() {
     WeatherUsmbTheme {
-        MainWeatherScreen(cityName = "test", cityLat = 0.0, cityLon = 0.0, cityTemp = 0.0)
+        MainWeatherScreen(cityName = "test", cityLat = 0.0, cityLon = 0.0, cityTemp = 0.0, cityMeteo = "")
         //CityScreen()
     }
 }

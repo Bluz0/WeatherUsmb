@@ -8,7 +8,7 @@ import td.info507.weatherusmb.storage.utility.file.JSONFileStorage
 
 class CityJSONFileStorage(context: Context) : JSONFileStorage<City>(context, "city") {
     override fun create(id: Int, obj: City): City {
-        return City(id, obj.nameCity, obj.lat, obj.lon, obj.temp, hour = obj.hour)
+        return City(id, obj.nameCity, obj.lat, obj.lon, obj.temp, hour = obj.hour, condition = obj.condition, meteo = obj.meteo)
     }
 
     override fun objectToJson(id: Int, obj: City): JSONObject {
@@ -25,6 +25,14 @@ class CityJSONFileStorage(context: Context) : JSONFileStorage<City>(context, "ci
         }
         json.put(City.HOUR, hourArray)
 
+        val conditionArray = JSONArray()
+        obj.condition.forEach { temp ->
+            conditionArray.put(temp)
+        }
+        json.put(City.CONDITION, conditionArray)
+
+        json.put(City.METEO, obj.meteo)
+
         return json
     }
 
@@ -39,13 +47,24 @@ class CityJSONFileStorage(context: Context) : JSONFileStorage<City>(context, "ci
             }
         }
 
+        val conditionList = mutableListOf<String>()
+
+        val conditionArray = json.optJSONArray(City.CONDITION)
+        if (conditionArray != null) {
+            for (i in 0 until conditionArray.length()) {
+                conditionList.add(conditionArray.getString(i))
+            }
+        }
+
         return City(
             json.getInt(City.ID),
             json.getString(City.NAMECITY),
             lat = json.getDouble(City.LAT),
             lon = json.getDouble(City.LON),
             temp = json.getDouble(City.TEMP),
-            hour = hourList
+            hour = hourList,
+            condition = conditionList,
+            meteo = json.optString(City.METEO, "")
             )
     }
 
