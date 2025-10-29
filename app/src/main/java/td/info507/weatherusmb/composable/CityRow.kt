@@ -96,6 +96,7 @@ fun CityRow(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun CityRowPreview() {
@@ -103,3 +104,4 @@ fun CityRowPreview() {
         CityRow(City(0,"Le Bourget-Du-Lac",0.0,0.0,temp = 0.0),{},{})
     }
 }
+*/

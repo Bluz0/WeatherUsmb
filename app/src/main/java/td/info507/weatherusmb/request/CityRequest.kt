@@ -1,5 +1,6 @@
 package td.info507.weatherusmb.request
 
+import android.R
 import android.content.Context
 import android.location.Geocoder
 import android.os.Build
@@ -57,12 +58,29 @@ class CityRequest(private val context : Context, private val cityName: String, o
         val location = json.getJSONObject("location") // Recup la liste location
         val current = json.getJSONObject("current") // recup temp mtn
 
+        val forecast = json.getJSONObject("forecast").getJSONArray("forecastday")
+        val hours_forecast = forecast.getJSONObject(0).getJSONArray("hour")//.getJSONObject(0)
+
+        Log.d("forecast",hours_forecast.toString())
+
+        val hour_day_list = mutableListOf<String>()
+
+        Log.d("list_temp", hour_day_list.toString())
+
+
+        for (i in 0 until hours_forecast.length()) {
+            hour_day_list.add(hours_forecast.getJSONObject(i).getString("temp_c") + "°C")
+        }
+
+        Log.d("list_temp",hour_day_list.toString())
+
         val city = City(
             id = 0,
             nameCity = location.getString("name"),
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon"),
-            temp  = current.getDouble("temp_c")
+            temp  = current.getDouble("temp_c"),
+            hour = hour_day_list
         )
         CityStorage.removeDuplicates(context)
         CityStorage.get(context).insert(city) // Sauvegarde json local
@@ -113,12 +131,21 @@ class CityRequestByCoordinates(
     private fun insertCity(json: JSONObject, cityName: String) {
         val location = json.getJSONObject("location")
         val current = json.getJSONObject("current")
+        val forecast = json.getJSONObject("forecast").getJSONArray("forecastday")
+        val hours_forecast = forecast.getJSONObject(0).getJSONArray("hour")
+        val hour_day_list = mutableListOf<String>()
+
+        for (i in 0 until hours_forecast.length()) {
+            hour_day_list.add(hours_forecast.getJSONObject(i).getString("temp_c") + "°C")
+        }
+
         val city = City(
             id = 0,
             nameCity = cityName,
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon"),
-            temp = current.getDouble("temp_c")
+            temp = current.getDouble("temp_c"),
+            hour = hour_day_list
         )
 
         CityStorage.get(context).insert(city)

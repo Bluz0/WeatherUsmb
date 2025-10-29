@@ -1,6 +1,8 @@
 package td.info507.weatherusmb.model
 
-class City (val id : Int = 0,val nameCity : String, val lat : Double, val lon : Double, val temp : Double) {
+import android.R
+
+class City (val id : Int = 0,val nameCity : String, val lat : Double, val lon : Double, val temp : Double, val hour : MutableList<String>) {
 
     companion object{
         const val ID = "id"
@@ -9,6 +11,8 @@ class City (val id : Int = 0,val nameCity : String, val lat : Double, val lon : 
         const val LON = "lon"
 
         const val TEMP = "temp_c"
+
+        const val HOUR = "hour"
     }
 
 }

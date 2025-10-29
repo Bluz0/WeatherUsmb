@@ -45,7 +45,7 @@ object CityStorage {
         val storage = get(context)
         val allCities = storage.findAll()
 
-        // Groupe les villes par nom (case insensitive)
+        // Groupe les villes par nom
         val cityMap = mutableMapOf<String, City>()
         val idsToDelete = mutableListOf<Int>()
 

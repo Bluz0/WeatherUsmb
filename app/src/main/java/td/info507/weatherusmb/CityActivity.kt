@@ -194,6 +194,7 @@ fun CityScreenList() {
                             putExtra("cityLon", cityChoisi.lon)
                             putExtra("cityId", cityChoisi.id)
                             putExtra("cityTemperature", city.temp)
+                            putStringArrayListExtra("cityHour", ArrayList(city.hour))
                         }
                         context.startActivity(intent)
                     },

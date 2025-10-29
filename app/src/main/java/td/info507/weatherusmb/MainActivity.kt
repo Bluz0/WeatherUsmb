@@ -86,10 +86,11 @@ class MainActivity : ComponentActivity() {
         val cityLat = intent.getDoubleExtra("cityLat", 0.0)
         val cityLon = intent.getDoubleExtra("cityLon", 0.0)
         val cityTemp = intent.getDoubleExtra("cityTemperature", 0.0)
-
+        val cityHour = intent.getStringArrayListExtra("cityHour")?.toMutableList()
+            ?: mutableListOf()
         setContent {
             WeatherUsmbTheme {
-                MainWeatherScreen(cityName, cityLat,cityLon, cityTemp)
+                MainWeatherScreen(cityName, cityLat,cityLon, cityTemp, cityHour)
                 //MainWeatherScreen()
                 //CityScreen()
             }
@@ -152,7 +153,8 @@ fun prevision_jour(TextJour : String, tempBas : String, tempHaut : String){
 fun MainWeatherScreen(cityName: String,
                       cityLat: Double = 0.0,
                       cityLon: Double = 0.0,
-                      cityTemp : Double){
+                      cityTemp : Double,
+                      cityHour : MutableList<String> = mutableListOf()){
     val context = LocalContext.current
 
     // Box = la page
@@ -274,7 +276,7 @@ fun MainWeatherScreen(cityName: String,
             // TODO : temp api
             // TODO : mettre en place la fct pour enlever les heures avec heures actuel
 
-            val testtemp = arrayOf("0°","1°","2°","3°","4°","5°","6°","7°","8°","9°","10°","11°","12°","13°","14°","15°","16°","17°","18°","19°","20°","21°","22°","23°")
+            //val testtemp = arrayOf("0°","1°","2°","3°","4°","5°","6°","7°","8°","9°","10°","11°","12°","13°","14°","15°","16°","17°","18°","19°","20°","21°","22°","23°")
             var hours = arrayOf("00h","01h","02h","03h","04h","05h","06h","07h","08h","09h","10h","11h","12h","13h","14h","15h","16h","17h","18h","19h","20h","21h","22h","23h")
             val itemWidth = 60.dp
 
@@ -282,11 +284,11 @@ fun MainWeatherScreen(cityName: String,
 
             LazyRow(modifier = Modifier.fillMaxWidth()) {
                 // Remplace icon par fct
-                items(testtemp.size) {
+                items(cityHour.size) {
                     i ->
                     Box(modifier = Modifier.width(itemWidth).fillMaxHeight()){
                         // text : les temps
-                        Text(testtemp[i], modifier = Modifier.fillMaxWidth().padding(5.dp,0.dp,0.dp,0.dp),textAlign = TextAlign.Center)
+                        Text(cityHour[i], modifier = Modifier.fillMaxWidth().padding(5.dp,0.dp,0.dp,0.dp),textAlign = TextAlign.Center)
                         Icon(
                             painter = painterResource(R.drawable.clear_day),
                             contentDescription = "icon meteo",
