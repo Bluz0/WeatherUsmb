@@ -80,6 +80,24 @@ class CityRequest(private val context : Context, private val cityName: String, o
         Log.d("list_temp",hour_day_list.toString())
         Log.d("list_cond",condition_list.size.toString())
 
+
+        val min_temp_now = forecast.getJSONObject(0).getJSONObject("day").getString("mintemp_c")
+        val max_temp_now = forecast.getJSONObject(0).getJSONObject("day").getString("maxtemp_c")
+        val min_demain = forecast.getJSONObject(1).getJSONObject("day").getString("mintemp_c")
+        val max_demain = forecast.getJSONObject(1).getJSONObject("day").getString("maxtemp_c")
+        val min_apres = forecast.getJSONObject(2).getJSONObject("day").getString("mintemp_c")
+        val max_apres = forecast.getJSONObject(2).getJSONObject("day").getString("maxtemp_c")
+
+        val listes_min_max = mutableListOf<String>(min_temp_now,max_temp_now,min_demain,max_demain,min_apres,max_apres)
+
+        val vent_km = forecast.getJSONObject(0).getJSONObject("day").getString("maxwind_kph")
+
+        val humidity = forecast.getJSONObject(0).getJSONObject("day").getString("avghumidity")
+        val uv = forecast.getJSONObject(0).getJSONObject("day").getString("uv")
+
+        Log.d("humidv", humidity.toString())
+        Log.d("uv",uv.toString())
+
         val city = City(
             id = 0,
             nameCity = location.getString("name"),
@@ -88,7 +106,11 @@ class CityRequest(private val context : Context, private val cityName: String, o
             temp  = current.getDouble("temp_c"),
             hour = hour_day_list,
             condition = condition_list,
-            meteo = condition_now
+            meteo = condition_now,
+            prevision = listes_min_max,
+            vent = vent_km,
+            humidity = humidity,
+            uv = uv
         )
         CityStorage.removeDuplicates(context)
         CityStorage.get(context).insert(city) // Sauvegarde json local
@@ -114,7 +136,7 @@ class CityRequestByCoordinates(
 
         val request = JsonObjectRequest(
             Request.Method.GET,
-            "http://api.weatherapi.com/v1/forecast.json?key=$API_KEY&q=$coords&days=1",
+            "http://api.weatherapi.com/v1/forecast.json?key=$API_KEY&q=$coords&days=3",
             null,
             { response ->
                 // Récupère le nom de la ville
@@ -150,6 +172,20 @@ class CityRequestByCoordinates(
             condition_list.add(hours_forecast.getJSONObject(i).getJSONObject("condition").getString("text"))
         }
 
+        val min_temp_now = forecast.getJSONObject(0).getJSONObject("day").getString("mintemp_c")
+        val max_temp_now = forecast.getJSONObject(0).getJSONObject("day").getString("maxtemp_c")
+        val min_demain = forecast.getJSONObject(1).getJSONObject("day").getString("mintemp_c")
+        val max_demain = forecast.getJSONObject(1).getJSONObject("day").getString("maxtemp_c")
+        val min_apres = forecast.getJSONObject(2).getJSONObject("day").getString("mintemp_c")
+        val max_apres = forecast.getJSONObject(2).getJSONObject("day").getString("maxtemp_c")
+
+        val listes_min_max = mutableListOf<String>(min_temp_now,max_temp_now,min_demain,max_demain,min_apres,max_apres)
+
+        val vent_km = forecast.getJSONObject(0).getJSONObject("day").getString("maxwind_kph")
+
+        val humidity = forecast.getJSONObject(0).getJSONObject("day").getString("avghumidity")
+        val uv = forecast.getJSONObject(0).getJSONObject("day").getString("uv")
+
         val city = City(
             id = 0,
             nameCity = cityName,
@@ -158,7 +194,12 @@ class CityRequestByCoordinates(
             temp = current.getDouble("temp_c"),
             hour = hour_day_list,
             condition = condition_list,
-            meteo = condition_now
+            meteo = condition_now,
+            prevision = listes_min_max,
+            vent = vent_km,
+            humidity = humidity,
+            uv = uv
+
         )
 
         CityStorage.get(context).insert(city)

@@ -197,6 +197,10 @@ fun CityScreenList() {
                             putStringArrayListExtra("cityHour", ArrayList(city.hour))
                             putStringArrayListExtra("cityCondition", ArrayList(city.condition))
                             putExtra("cityMeteo", cityChoisi.meteo)
+                            putStringArrayListExtra("cityPrevision", ArrayList(city.prevision))
+                            putExtra("cityVent", cityChoisi.vent)
+                            putExtra("cityHumidity",cityChoisi.humidity)
+                            putExtra("cityUV",cityChoisi.uv)
                         }
                         context.startActivity(intent)
                     },
@@ -211,7 +215,7 @@ fun CityScreenList() {
 
 
         FloatingActionButton(
-            modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
+            modifier = Modifier.align(Alignment.BottomEnd).padding(start = 16.dp, end= 16.dp, bottom = 100.dp),
             onClick = { bouton_click  = true },
             containerColor = fondBlanc,
             shape = CircleShape

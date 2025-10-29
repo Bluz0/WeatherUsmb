@@ -96,9 +96,14 @@ class MainActivity : ComponentActivity() {
         val cityCondition = intent.getStringArrayListExtra("cityCondition")?.toMutableList()
             ?: mutableListOf()
         val cityMeteo = intent.getStringExtra("cityMeteo") ?: ""
+        val cityPrevision = intent.getStringArrayListExtra("cityPrevision")?.toMutableList()
+            ?: mutableListOf()
+        val cityVent = intent.getStringExtra("cityVent")?: "0"
+        val cityHumidity = intent.getStringExtra("cityHumidity")?: "0"
+        val cityUV = intent.getStringExtra("cityUV")?: "0.0"
         setContent {
             WeatherUsmbTheme {
-                MainWeatherScreen(cityName, cityLat,cityLon, cityTemp, cityHour, cityCondition,cityMeteo)
+                MainWeatherScreen(cityName, cityLat,cityLon, cityTemp, cityHour, cityCondition,cityMeteo, cityPrevision, cityVent, cityHumidity,cityUV)
                 //MainWeatherScreen()
                 //CityScreen()
             }
@@ -153,7 +158,11 @@ fun MainWeatherScreen(cityName: String,
                       cityTemp : Double,
                       cityHour : MutableList<String> = mutableListOf(),
                       cityCondition : MutableList<String> = mutableListOf(),
-                      cityMeteo : String){
+                      cityMeteo : String,
+                      cityPrevision : MutableList<String> = mutableListOf(),
+                      cityVent : String,
+                      cityHumidity : String,
+                      cityUV : String){
     val context = LocalContext.current
 
     // Box = la page
@@ -248,7 +257,7 @@ fun MainWeatherScreen(cityName: String,
                 )
                 // row pour mettre icon avec txt vent
                 Text(
-                    "11 km/h",
+                    "$cityVent km/h",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color(27, 27, 27)
                     ),
@@ -331,14 +340,14 @@ fun MainWeatherScreen(cityName: String,
             val jour_2 = jour_format.format(calendar.time)
 
 
-            prevision_jour("aujourd'hui","18","24")
+            prevision_jour("aujourd'hui",cityPrevision[0],cityPrevision[1])
             Separateur()
-            prevision_jour(demain,"17","25")
+            prevision_jour(demain,cityPrevision[2],cityPrevision[3])
             Separateur()
-            prevision_jour(jour_2,"8", tempHaut = "14")
+            prevision_jour(jour_2,cityPrevision[4], tempHaut = cityPrevision[5])
         }
 
-        Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 20.dp,end = 220.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
+        Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 20.dp,end = 200.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
             Text("UV",
                 style = MaterialTheme.typography.labelSmall.copy(
                 fontWeight = FontWeight.Normal,
@@ -349,9 +358,9 @@ fun MainWeatherScreen(cityName: String,
             )
 
             Box(Modifier.fillMaxWidth().fillMaxHeight()){
-                Text("Faible", modifier = Modifier.padding(15.dp,0.dp))
+                Text(cityUV, modifier = Modifier.padding(15.dp,0.dp))
                 Icon(
-                    painter = painterResource(R.drawable.clear_day),
+                    painter = painterResource(R.drawable.uv_index),
                     tint = Color.Unspecified,
                     contentDescription = "a voir.xml",
                     modifier = Modifier.padding(top = 30.dp).fillMaxWidth().fillMaxHeight()
@@ -359,7 +368,7 @@ fun MainWeatherScreen(cityName: String,
             }
         }
 
-        Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 220.dp,end = 20.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
+        Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 200.dp,end = 20.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
             Text("Humidité",
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontWeight = FontWeight.Normal,
@@ -370,7 +379,7 @@ fun MainWeatherScreen(cityName: String,
             )
 
             Box(Modifier.fillMaxWidth().fillMaxHeight()){
-                Text("76%", modifier = Modifier.padding(15.dp,0.dp))
+                Text(cityHumidity+"%", modifier = Modifier.padding(15.dp,0.dp))
                 Icon(
                     painter = painterResource(R.drawable.humidity),
                     tint = Color.Unspecified,
@@ -398,7 +407,7 @@ fun hourRightNow(heureMtn : String,hours : List<String>){
 @Composable
 fun WeatherMainPreview() {
     WeatherUsmbTheme {
-        MainWeatherScreen(cityName = "test", cityLat = 0.0, cityLon = 0.0, cityTemp = 0.0, cityMeteo = "")
+        MainWeatherScreen(cityName = "test", cityLat = 0.0, cityLon = 0.0, cityTemp = 0.0, cityMeteo = "", cityVent = "0", cityPrevision = mutableListOf("1","2","3","4","5","6"), cityHumidity = "0", cityUV = "0.0")
         //CityScreen()
     }
 }
