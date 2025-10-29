@@ -26,7 +26,7 @@ class CityRequest(private val context : Context, private val cityName: String, o
 
         val request = JsonObjectRequest(
             Request.Method.GET,
-            URL + cityName,
+            URL + cityName + "&days=3&aqi=no&alerts=no",
             null,
             { response ->
                 refresh(response)

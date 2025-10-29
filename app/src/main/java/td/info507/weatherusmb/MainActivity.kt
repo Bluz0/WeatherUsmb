@@ -75,6 +75,9 @@ import androidx.compose.runtime.setValue
 import td.info507.weatherusmb.composable.TextToLogo
 import td.info507.weatherusmb.model.City
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -321,12 +324,20 @@ fun MainWeatherScreen(cityName: String,
                     modifier = Modifier.padding(5.dp,0.dp)
                 )
             }
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+            val demain = jour_format.format(calendar.time)
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+            val jour_2 = jour_format.format(calendar.time)
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+            val jour_3 = jour_format.format(calendar.time)
 
-            prevision_jour("Jeu.","18","24")
+
+            prevision_jour(demain,"18","24")
             Separateur()
-            prevision_jour("Ven.","17","25")
+            prevision_jour(jour_2,"17","25")
             Separateur()
-            prevision_jour("Sam.","8", tempHaut = "14")
+            prevision_jour(jour_3,"8", tempHaut = "14")
         }
 
         Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 20.dp,end = 220.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
