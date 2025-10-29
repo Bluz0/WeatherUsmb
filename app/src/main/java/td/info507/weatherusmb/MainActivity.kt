@@ -329,15 +329,13 @@ fun MainWeatherScreen(cityName: String,
             val demain = jour_format.format(calendar.time)
             calendar.add(Calendar.DAY_OF_YEAR, 1)
             val jour_2 = jour_format.format(calendar.time)
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-            val jour_3 = jour_format.format(calendar.time)
 
 
-            prevision_jour(demain,"18","24")
+            prevision_jour("aujourd'hui","18","24")
             Separateur()
-            prevision_jour(jour_2,"17","25")
+            prevision_jour(demain,"17","25")
             Separateur()
-            prevision_jour(jour_3,"8", tempHaut = "14")
+            prevision_jour(jour_2,"8", tempHaut = "14")
         }
 
         Column(Modifier.fillMaxWidth().align(Alignment.Center).paddingFromBaseline(800.dp).padding(start = 20.dp,end = 220.dp).height(200.dp).background(fondBlanc,RoundedCornerShape(10.dp))){
