@@ -122,7 +122,7 @@ fun CityScreenList() {
     )
 
 
-    // TODO : remettre un cleanAll prcq a chaque fois les données changent pas
+    // Lance demande location 1 fois
     LaunchedEffect(Unit) {
         // cityRequest force une requête au démarrage et ajoute via api
         //CityRequest(context) {
@@ -155,6 +155,7 @@ fun CityScreenList() {
     val cityListe = remember { mutableStateListOf<CitySearchResultat>() }
     val isSearching = remember { mutableStateOf(false) }
 
+    // Permet de lancer notre requete si nom ville change
     LaunchedEffect(ville_nom) {
         if (ville_nom.length >= 3) {
             isSearching.value = true

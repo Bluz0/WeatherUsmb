@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherUsmb</string>
+    <string name="app_name" translatable="false">WeatherUsmb</string>
     <string name="title_activity_main2">Leanback MainActivity2</string>
     <string name="browse_title">Videos by Your Company</string>
     <string name="related_movies">Related Videos</string>
