@@ -1,5 +1,8 @@
 # In ENGLISH 🇬🇧
-<p align="center"><img src="app/src/main/res/images_repo/logo-weather-png.png"></p>
+<p align="center">
+    <img src="app/src/main/res/images_repo/logo-weather-png.png">
+</p>
+
 ## WeatherUsmb
 
 WeatherUsmb is a native Android weather application built with Kotlin and Jetpack Compose. It fetches real-time weather data from WeatherAPI to provide users with current conditions, hourly forecasts, and a 3-day forecast for various locations. The app supports automatic location detection, city search, and a persistent list of saved cities.
@@ -21,8 +24,21 @@ WeatherUsmb is a native Android weather application built with Kotlin and Jetpac
 -   **City List Screen (`CityActivity`):** The primary screen that displays a list of the user's saved cities. From here, you can navigate to the detailed weather view for any city, add new cities via a search modal, or delete existing ones.
 -   **Weather Details Screen (`MainActivity`):** Shows a comprehensive weather report for a selected city, including an overview, 24-hour breakdown, 3-day forecast, and additional metrics like humidity and UV index.
 
+<p align="center">
+    <img src="app/src/main/res/images_repo/image-search.png">
+</p>
+<p align="center">
+    <img src="app/src/main/res/images_repo/image-add.png">
+</p>
+<p align="center">
+    <img src="app/src/main/res/images_repo/image-details.png">
+</p>
+
 # En FRANCAIS  🇫🇷
-<p align="center"><img src="app/src/main/res/images_repo/logo-weather-png.png"></p>
+<p align="center">
+    <img src="app/src/main/res/images_repo/logo-weather-png.png">
+</p>
+
 ## WeatherUsmb
 
 WeatherUsmb est une application météo Android native construite avec Kotlin et Jetpack Compose. Il récupère des données météorologiques en temps réel de WeatherAPI pour fournir aux utilisateurs les conditions actuelles, les prévisions horaires et une prévision sur 3 jours pour divers endroits. L’application prend en charge la détection automatique de localisation, la recherche de villes et une liste persistante des villes enregistrées.
@@ -43,4 +59,14 @@ WeatherUsmb est une application météo Android native construite avec Kotlin et
 ## Écrans d’application
 -   **Écran de liste de villes (`CityActivity`):** L’écran principal qui affiche une liste des villes sauvegardées par l’utilisateur. De là, vous pouvez naviguer vers la vue météo détaillée pour n’importe quelle ville, ajouter de nouvelles villes via une recherche modale ou supprimer des villes existantes.
 -   **Écran de détails météorologiques (`MainActivity`) :** Affiche un rapport météorologique complet pour une ville sélectionnée, y compris un aperçu, une ventilation 24 heures sur 24, des prévisions à 3 jours et des métriques supplémentaires comme l’humidité et l’indice UV.
+
+<p align="center">
+    <img src="app/src/main/res/images_repo/image-search.png">
+</p>
+<p align="center">
+    <img src="app/src/main/res/images_repo/image-add.png">
+</p>
+<p align="center">
+    <img src="app/src/main/res/images_repo/image-details.png">
+</p>
 
