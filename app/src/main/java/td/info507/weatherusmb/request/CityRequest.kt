@@ -31,10 +31,12 @@ class CityRequest(private val context : Context, private val cityName: String, o
             { response ->
                 refresh(response)
                 onUpdate()
-                Toast.makeText(context,"Ville récuperer", Toast.LENGTH_SHORT).show() },
+                //Toast.makeText(context,"Ville récuperer", Toast.LENGTH_SHORT).show()
+                },
             { err ->
                 println(err)
-                Toast.makeText(context, "Une erreur s'est produite", Toast.LENGTH_SHORT).show() }
+                //Toast.makeText(context, "Une erreur s'est produite", Toast.LENGTH_SHORT).show()
+            }
 
         )
         queue.add(request)
@@ -98,8 +100,13 @@ class CityRequest(private val context : Context, private val cityName: String, o
         Log.d("humidv", humidity.toString())
         Log.d("uv",uv.toString())
 
+        val storage = CityStorage.get(context)
+        val existingCity = storage.findAll().find {
+            it.nameCity.equals(location.getString("name"), ignoreCase = true)
+        }
+
         val city = City(
-            id = 0,
+            id = existingCity?.id ?: 2,
             nameCity = location.getString("name"),
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon"),
@@ -112,8 +119,18 @@ class CityRequest(private val context : Context, private val cityName: String, o
             humidity = humidity,
             uv = uv
         )
-        CityStorage.removeDuplicates(context)
-        CityStorage.get(context).insert(city) // Sauvegarde json local
+        //CityStorage.get(context).insert(city) // Sauvegarde json local
+        //CityStorage.removeDuplicates(context)
+
+        if (existingCity != null) {
+
+            storage.update(existingCity.id, city)
+            Log.d("CityRequest", "Ville mise à jour: ${city.nameCity} (ID: ${existingCity.id})")
+        } else {
+
+            storage.insert(city)
+            Log.d("CityRequest", "Nouvelle ville insérée: ${city.nameCity}")
+        }
 
 
 
@@ -144,7 +161,7 @@ class CityRequestByCoordinates(
             },
             { err ->
                 Log.e("CityRequestCoords", "Erreur API: ${err.message}")
-                Toast.makeText(context, "Erreur lors de la récupération", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(context, "Erreur lors de la récupération", Toast.LENGTH_SHORT).show()
             }
         )
         queue.add(request)
@@ -167,6 +184,7 @@ class CityRequestByCoordinates(
         val condition_list = mutableListOf<String>()
         val condition_now = current.getJSONObject("condition").getString("text")
 
+
         for (i in 0 until hours_forecast.length()) {
             hour_day_list.add(hours_forecast.getJSONObject(i).getString("temp_c") + "°C")
             condition_list.add(hours_forecast.getJSONObject(i).getJSONObject("condition").getString("text"))
@@ -179,6 +197,14 @@ class CityRequestByCoordinates(
         val min_apres = forecast.getJSONObject(2).getJSONObject("day").getString("mintemp_c")
         val max_apres = forecast.getJSONObject(2).getJSONObject("day").getString("maxtemp_c")
 
+        val storage = CityStorage.get(context)
+        val existingCity = storage.findAll().find { city ->
+            // Ville GPS = première ville (index 0) OU même coordonnées
+            storage.findAll().indexOf(city) == 0 ||
+                    (Math.abs(city.lat - location.getDouble("lat")) < 0.01 &&
+                            Math.abs(city.lon - location.getDouble("lon")) < 0.01)
+        }
+
         val listes_min_max = mutableListOf<String>(min_temp_now,max_temp_now,min_demain,max_demain,min_apres,max_apres)
 
         val vent_km = forecast.getJSONObject(0).getJSONObject("day").getString("maxwind_kph")
@@ -187,7 +213,7 @@ class CityRequestByCoordinates(
         val uv = forecast.getJSONObject(0).getJSONObject("day").getString("uv")
 
         val city = City(
-            id = 0,
+            id = existingCity?.id ?: 1,
             nameCity = cityName,
             lat = location.getDouble("lat"),
             lon = location.getDouble("lon"),
@@ -202,7 +228,18 @@ class CityRequestByCoordinates(
 
         )
 
-        CityStorage.get(context).insert(city)
-        CityStorage.removeDuplicates(context)
+        if (existingCity != null) {
+
+            storage.update(existingCity.id, city)
+            Log.d("CityRequest", "Ville mise à jour: ${city.nameCity} (ID: ${existingCity.id})")
+        } else {
+
+            storage.insert(city)
+            Log.d("CityRequest", "Nouvelle ville insérée: ${city.nameCity}")
+        }
+        //CityStorage.get(context).insert(city)
+        //CityStorage.removeDuplicates(context)
+
+
     }
 }

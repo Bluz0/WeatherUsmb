@@ -74,6 +74,7 @@ import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.ui.Alignment
 import kotlinx.coroutines.delay
 import td.info507.weatherusmb.composable.CitySearchRow
+import td.info507.weatherusmb.composable.refreshAllCities
 import td.info507.weatherusmb.request.CitySearch
 import td.info507.weatherusmb.request.CitySearchResultat
 
@@ -103,7 +104,7 @@ fun CityScreenList() {
 
 
 
-    // Configuration de la géolocalisation
+    // Config de la geolocalisation
     val requestLocation = rememberLocationPermission(
         onLocationGranted = { location ->
             isLoadingGPS.value = true
@@ -117,7 +118,7 @@ fun CityScreenList() {
         },
         onLocationDenied = {
             isLoadingGPS.value = false
-            Toast.makeText(context, "Permission GPS refusée", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Permission GPS refusée", Toast.LENGTH_SHORT).show()
         }
     )
 
@@ -133,6 +134,12 @@ fun CityScreenList() {
 
         if (citys.isEmpty()) {
             requestLocation()
+        }
+
+        // Rafraîchit toutes les 15 minutes
+        while (true) {
+            delay(15 * 60 * 1000L)
+            refreshAllCities(context, citys) {}
         }
 
         //}
