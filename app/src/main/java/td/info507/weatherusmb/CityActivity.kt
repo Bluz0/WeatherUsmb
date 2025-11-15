@@ -138,7 +138,10 @@ fun CityScreenList() {
 
         // Rafraîchit toutes les 15 minutes
         while (true) {
-            delay(15 * 60 * 1000L)
+
+
+            delay(2 * 60 * 1000L)
+            requestLocation()
             refreshAllCities(context, citys) {}
         }
 
